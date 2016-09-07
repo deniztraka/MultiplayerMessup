@@ -30,9 +30,24 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="public\js\app.js" />
+    <Compile Include="public\js\boot.js" />
+    <Compile Include="public\js\game.js" />
+    <Compile Include="public\js\mainmenu.js" />
+    <Compile Include="public\js\preloader.js" />
+    <Compile Include="public\js\splashScreen.js" />
     <Compile Include="server.js" />
+    <Content Include="index.html" />
     <Content Include="package.json" />
+    <Content Include="public\assets\sprites\phaser2.png" />
+    <Content Include="public\assets\sprites\preloader-bar.png" />
     <Content Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="public\" />
+    <Folder Include="public\assets\sprites\" />
+    <Folder Include="public\js\" />
+    <Folder Include="public\assets\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
