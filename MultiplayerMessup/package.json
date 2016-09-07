@@ -1,0 +1,9 @@
+{
+  "name": "multiplayer-messup",
+  "version": "0.0.0",
+  "description": "MultiplayerMessup",
+  "main": "server.js",
+  "author": {
+    "name": "deniz"
+  }
+}
