@@ -18,10 +18,10 @@ GameStates.Boot.prototype = {
         // setup game environment
         // scale, input etc..
 
-        //$(window).resize(function () {
-        //    resizeGame(this.game);
-        //});
-        //resizeGame(this.game);
+        $(window).resize(function () {
+            resizeGame(this.game);
+        });
+        resizeGame(this.game);
 
         // call next state
         this.state.start('Preloader');
@@ -29,6 +29,6 @@ GameStates.Boot.prototype = {
 };
 
 //resizing utils
-//function resizeGame(gameX) {
-//    gameX.scale.setGameSize($(window).width(), $(window).height());
-//}
+function resizeGame(gameX) {
+    gameX.scale.setGameSize($(window).width(), $(window).height());
+}

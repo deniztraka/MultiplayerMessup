@@ -1,22 +1,34 @@
-﻿GameStates.Game = function (game) {
-    
-
-    
+﻿GameStates.Game = function (game) {  
 };
 
-GameStates.Game.prototype = {
+var socket;
 
-    create: function () {
-        //below code creates a simple tween animation. You will want to delete this when adding your code
-        var logo = this.add.sprite(this.world.centerX, this.world.centerY, 'logo');
-        logo.anchor.setTo(0.5, 0.5);
-        logo.scale.setTo(0.2, 0.2);
-        this.add.tween(logo.scale).to({ x: 1, y: 1 }, 2000, Phaser.Easing.Bounce.Out, true);
+GameStates.Game.prototype = {
+    preload: function () {
+        this.game.time.advancedTiming = true;
         
     },
+    create: function () {
+        this.world.setBounds(0, 0, 1024, 768);
+        this.physics.startSystem(Phaser.Physics.ARCADE);
+        tilesprite = this.add.tileSprite(0, 0, this.world.bounds.width, this.world.bounds.height, 'dirt');        
 
+        socket = io(window.location.origin);
+        attachServerEvents(this, socket);
+    },
     update: function () { },
-
+    
     render: function () { },
+};
+
+var attachServerEvents = function (game, socket) {
+    socket.on("createLocalPlayer", function (playerData) {
+        createLocalPlayer(game, socket, playerData);
+    });
+};
+
+var createLocalPlayer = function (game, socket, playerData) {
+    var player = game.add.sprite(playerData.position.x, playerData.position.y, 'player');
+    player.anchor.setTo(0.5, 0.5);
 };
 

@@ -11,6 +11,9 @@ GameStates.Preloader.prototype = {
         // load all game assets
         // images, spritesheets, atlases, audio etc..
         this.load.image('logo', '../public/assets/sprites/phaser2.png');
+              
+        this.load.image('player', '/public/assets/sprites/player/player.png');
+        this.load.image('dirt', '/public/assets/sprites/tiles/dirt.png');
     },
 
     create: function () {
