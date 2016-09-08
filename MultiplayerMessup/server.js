@@ -6,7 +6,7 @@ var serv = require('http').Server(app);
 var io = require('socket.io')(serv, {});
 var p2 = require('p2');
 
-var player = require('./server/core/mobile/player.js');
+var Player = require('./server/core/mobile/player.js');
 
 // Server props
 var lastTimeSeconds;
@@ -27,7 +27,8 @@ io.on(constants.events.connect, function (socket) {
 
 var onPlayerConnect = function (socket, io) {   
     //player is created
-    var player = new player(socket); 
+    var player = new Player(socket); 
+    console.log(socket.handshake.query["name"] + " is connected to world.");
     
     //send playerInfo to the sender
     socket.emit(constants.commands.createLocalPlayer, player.clientInfo);
@@ -43,6 +44,7 @@ var world = new p2.World({
 // Turn off global gravity
 world.applyGravity = false;
 
+//main game loop
 setInterval(function () {
     totalElapsedTimeFromSeconds += config.server.serverProcessFrequency;
     var deltaTime = totalElapsedTimeFromSeconds - lastTimeSeconds;

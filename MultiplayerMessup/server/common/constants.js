@@ -1,6 +1,6 @@
 ﻿module.exports = {
     events: {
-        connect: "c_Connect"
+        connect: "connection"
     },
     commands: {
         createLocalPlayer : "c_CreateLocalPlayer",

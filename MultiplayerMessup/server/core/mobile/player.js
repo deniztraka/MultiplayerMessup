@@ -2,6 +2,7 @@
 var utils = require('../../common/utils.js');
 var p2 = require('p2');
 var player = function () {
+    /* p2 staff start */
     p2.Body.call(this, {
         mass: config.game.player.mass,
         position: [utils.math.randomInt(0, config.game.bounds.width), utils.math.randomInt(0, config.game.bounds.height)],
@@ -11,6 +12,7 @@ var player = function () {
     playerShape.collisionGroup = Math.pow(2, 0);
     playerShape.collisionMask = Math.pow(2, 0);
     this.addShape(playerShape);
+    /* p2 staff end */
     
     this.speed = config.game.player.speed;
     this.type = config.game.player.type;
@@ -18,8 +20,8 @@ var player = function () {
     this.clientInfo = {
         id: this.id,
         position : {
-            x: this.interpolatedPosition[0],
-            y: this.interpolatedPosition[1]
+            x: this.position[0],
+            y: this.position[1]
         }       
     };
 };

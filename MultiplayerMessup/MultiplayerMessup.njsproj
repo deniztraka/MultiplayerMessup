@@ -36,6 +36,8 @@
     <Compile Include="public\js\mainmenu.js" />
     <Compile Include="public\js\preloader.js" />
     <Compile Include="public\js\splashScreen.js" />
+    <Compile Include="public\libs\CanvasInput.js" />
+    <Compile Include="public\libs\CanvasInput.min.js" />
     <Compile Include="server.js" />
     <Compile Include="server\common\config.js" />
     <Compile Include="server\common\constants.js" />
@@ -52,6 +54,7 @@
   <ItemGroup>
     <Folder Include="public\assets\sprites\tiles\" />
     <Folder Include="public\assets\sprites\player\" />
+    <Folder Include="public\libs\" />
     <Folder Include="server\" />
     <Folder Include="public\" />
     <Folder Include="public\assets\sprites\" />

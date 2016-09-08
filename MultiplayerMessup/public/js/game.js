@@ -4,27 +4,54 @@
 var socket;
 
 GameStates.Game.prototype = {
+    init: function (playerName) {
+        this.playerName = playerName;
+    },
     preload: function () {
-        this.game.time.advancedTiming = true;
-        
+        var self = this;
+        self.game.time.advancedTiming = true;
+        $(window).resize(function () {
+            self.resize();
+        });
+        self.resize();
     },
     create: function () {
-        this.world.setBounds(0, 0, 1024, 768);
-        this.physics.startSystem(Phaser.Physics.ARCADE);
-        tilesprite = this.add.tileSprite(0, 0, this.world.bounds.width, this.world.bounds.height, 'dirt');        
+        var self = this;
+        
+        self.buildWorld();
 
-        socket = io(window.location.origin);
-        attachServerEvents(this, socket);
+        socket = io(window.location.origin, { query: 'name=' + self.playerName });
+        self.attachServerEvents(socket);
     },
+
     update: function () { },
     
     render: function () { },
-};
 
-var attachServerEvents = function (game, socket) {
-    socket.on("createLocalPlayer", function (playerData) {
-        createLocalPlayer(game, socket, playerData);
-    });
+    resize: function () {
+        this.scale.setGameSize($(window).width(), $(window).height());
+    },
+
+    buildWorld: function () {
+        var game = this;
+
+        game.world.setBounds(0, 0, 1920, 1920);
+        game.physics.startSystem(Phaser.Physics.ARCADE);
+
+        //add floor dirt tile
+        tilesprite = game.add.tileSprite(0, 0, game.world.bounds.width, game.world.bounds.height, 'dirt');
+    },
+
+    attachServerEvents: function (socket) {
+        var game = this;
+        socket.on("c_CreateLocalPlayer", function (playerData) {
+            createLocalPlayer(game, socket, playerData);
+        });
+
+        socket.on("c_CreateNewRemotePlayer", function (playerData) {
+            //createNewRemotePlayer(game, socket, playerData);
+        });
+    }
 };
 
 var createLocalPlayer = function (game, socket, playerData) {
