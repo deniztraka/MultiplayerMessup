@@ -5,7 +5,7 @@
     //  Add the States your game has.
     game.state.add('Boot', GameStates.Boot);
     game.state.add('Preloader', GameStates.Preloader);
-    game.state.add('SplashScreen', GameStates.Game);
+    game.state.add('SplashScreen', GameStates.SplashScreen);
     game.state.add('MainMenu', GameStates.MainMenu);
     game.state.add('Game', GameStates.Game);
 
