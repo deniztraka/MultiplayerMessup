@@ -1,6 +1,6 @@
 ﻿var GameEngine = (function (my) {
-    var game;
-    my.Init = function (_game) {
+    var game;    
+    my.Init = function (_game,_socket) {
         game = _game;
     };
 

@@ -17,16 +17,18 @@ GameStates.Game.prototype = {
     },
     create: function () {
         var self = this;
-        GameEngine.Init(self);
-               
+        GameEngine.Init(self);                      
         self.buildWorld();
 
         socket = io(window.location.origin, { query: 'name=' + self.playerName });
-        SocketEvents.Init(socket,self);
+        ServerEvents.Init(socket,self);
             
+        InputManager.Init(self,socket);
     },
 
-    update: function () { },
+    update: function () {
+        InputManager.CheckMovement();
+    },
     
     render: function () { },
 

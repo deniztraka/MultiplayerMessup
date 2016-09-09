@@ -3,7 +3,7 @@
         connect: "connection"
     },
     commands: {
-        createLocalPlayer : "c_CreateLocalPlayer",
-        createNewRemotePlayer : "c_CreateNewRemotePlayer"
+        createLocalPlayer : "s_CreateLocalPlayer",
+        createNewRemotePlayer : "s_CreateNewRemotePlayer"
     }    
 }

@@ -33,6 +33,7 @@
     <Compile Include="public\js\app.js" />
     <Compile Include="public\js\boot.js" />
     <Compile Include="public\js\core\engine.js" />
+    <Compile Include="public\js\core\inputManager.js" />
     <Compile Include="public\js\core\socketEvents.js" />
     <Compile Include="public\js\game.js" />
     <Compile Include="public\js\mainmenu.js" />
@@ -44,6 +45,7 @@
     <Compile Include="server\common\config.js" />
     <Compile Include="server\common\constants.js" />
     <Compile Include="server\common\utils.js" />
+    <Compile Include="server\core\game.js" />
     <Compile Include="server\core\mobile\player.js" />
     <Content Include="index.html" />
     <Content Include="package.json" />
