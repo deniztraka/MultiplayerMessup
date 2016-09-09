@@ -17,11 +17,13 @@ GameStates.Game.prototype = {
     },
     create: function () {
         var self = this;
-        
+        GameEngine.Init(self);
+               
         self.buildWorld();
 
         socket = io(window.location.origin, { query: 'name=' + self.playerName });
-        self.attachServerEvents(socket);
+        SocketEvents.Init(socket,self);
+            
     },
 
     update: function () { },
@@ -37,25 +39,15 @@ GameStates.Game.prototype = {
 
         game.world.setBounds(0, 0, 1920, 1920);
         game.physics.startSystem(Phaser.Physics.ARCADE);
+        
+        game.scale.pageAlignHorizontally = true;
+        game.scale.pageAlignVertically = true;
+        // using RESIZE scale mode
+        game.scale.scaleMode = Phaser.ScaleManager.SHOWALL;
+        game.scale.updateLayout();
 
         //add floor dirt tile
         tilesprite = game.add.tileSprite(0, 0, game.world.bounds.width, game.world.bounds.height, 'dirt');
-    },
-
-    attachServerEvents: function (socket) {
-        var game = this;
-        socket.on("c_CreateLocalPlayer", function (playerData) {
-            createLocalPlayer(game, socket, playerData);
-        });
-
-        socket.on("c_CreateNewRemotePlayer", function (playerData) {
-            //createNewRemotePlayer(game, socket, playerData);
-        });
     }
-};
-
-var createLocalPlayer = function (game, socket, playerData) {
-    var player = game.add.sprite(playerData.position.x, playerData.position.y, 'player');
-    player.anchor.setTo(0.5, 0.5);
 };
 

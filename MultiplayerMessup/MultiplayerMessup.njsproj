@@ -32,6 +32,8 @@
   <ItemGroup>
     <Compile Include="public\js\app.js" />
     <Compile Include="public\js\boot.js" />
+    <Compile Include="public\js\core\engine.js" />
+    <Compile Include="public\js\core\socketEvents.js" />
     <Compile Include="public\js\game.js" />
     <Compile Include="public\js\mainmenu.js" />
     <Compile Include="public\js\preloader.js" />
@@ -54,6 +56,7 @@
   <ItemGroup>
     <Folder Include="public\assets\sprites\tiles\" />
     <Folder Include="public\assets\sprites\player\" />
+    <Folder Include="public\js\core\" />
     <Folder Include="public\libs\" />
     <Folder Include="server\" />
     <Folder Include="public\" />
