@@ -48,6 +48,30 @@ var GameManager = (function (my) {
             
         }
     };
+    
+    var processPlayerMovements = function () {
+        if (playerCount > 0) {
+            
+            for (var i = 0; i < world.bodies.length; i++) {
+                var body = world.bodies[i];
+                if (body.type = constants.game.player.type) {
+                    var player = body;
+                    if (player.movementStates.isMovingUp) { 
+                        player.position[1] -= player.speed;
+                    }
+                    if (player.movementStates.isMovingDown) { 
+                        player.position[1] += player.speed;
+                    }
+                    if (player.movementStates.isMovingLeft) {
+                        player.position[0] -= player.speed;
+                    }
+                    if (player.movementStates.isMovingRight) {
+                        player.position[0] += player.speed;
+                    }
+                }
+            };                                    
+        }
+    };
 
     my.RemovePlayerFromWorld = function (player) {
         bodyRemovalList.push(player);
@@ -66,6 +90,8 @@ var GameManager = (function (my) {
         } catch (e) {
             logger.error("Error occurred at world.step(). message: ", e);
         };
+        
+        processPlayerMovements();
 
         clearBodyRemovalList();
 

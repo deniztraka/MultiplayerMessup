@@ -20,9 +20,9 @@
 
             //if (player.position) {
                 //position update
-                //game.add.tween(player).to({ x: playerPositionData.position.x, y: playerPositionData.position.y }, 500, Phaser.Easing.Linear.None, true);
-                player.position.x = playerPositionData.position.x;
-                player.position.y = playerPositionData.position.y;
+                game.add.tween(player).to({ x: playerPositionData.position.x, y: playerPositionData.position.y }, 1000/30, Phaser.Easing.Linear.None, true);
+                //player.position.x = playerPositionData.position.x;
+                //player.position.y = playerPositionData.position.y;
             //}
         }
     };

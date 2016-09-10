@@ -5,20 +5,20 @@ var InputManager = (function (my) {
     var socket;
     var player;
 
-    var onUpKeyPressed = function () {
-        player.position[1] -= player.speed;
+    var onUpKeyPressed = function (isDown) {        
+        player.movementStates.isMovingUp = isDown;
     };
 
-    var onDownKeyPressed = function () {
-        player.position[1] += player.speed;
+    var onDownKeyPressed = function (isDown) {
+        player.movementStates.isMovingDown = isDown;        
     };
 
-    var onLeftKeyPressed = function () {
-        player.position[0] -= player.speed;
+    var onLeftKeyPressed = function (isDown) {
+        player.movementStates.isMovingLeft = isDown;        
     };
 
-    var onRightKeyPressed = function () {
-        player.position[0] += player.speed;
+    var onRightKeyPressed = function (isDown) {
+        player.movementStates.isMovingRight = isDown;        
     };
 
     //var onMouseClicked = function (player, mousePosition) {
@@ -72,17 +72,17 @@ var InputManager = (function (my) {
         //});
 
         //attach movement events
-        socket.on("c_OnUpKeyPressed", function () {
-            onUpKeyPressed(player);
+        socket.on("c_OnUpKeyPressed", function (isDown) {
+            onUpKeyPressed(isDown);
         });
-        socket.on("c_OnDownKeyPressed", function () {
-            onDownKeyPressed(player);
+        socket.on("c_OnDownKeyPressed", function (isDown) {
+            onDownKeyPressed(isDown);
         });
-        socket.on("c_OnLeftKeyPressed", function () {
-            onLeftKeyPressed(player);
+        socket.on("c_OnLeftKeyPressed", function (isDown) {
+            onLeftKeyPressed(isDown);
         });
-        socket.on("c_OnRightKeyPressed", function () {
-            onRightKeyPressed(player);
+        socket.on("c_OnRightKeyPressed", function (isDown) {
+            onRightKeyPressed(isDown);
         });
         //socket.on("c_OnShiftKeyPressed", function (isDown) {
         //    onShiftKeyPressed(player, isDown);
