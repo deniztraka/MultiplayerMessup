@@ -1,24 +1,27 @@
 ﻿var config = require('../../common/config.js');
+var constants = require('../../common/constants.js');
 var utils = require('../../common/utils.js');
 var p2 = require('p2');
-var player = function () {
+var player = function (name) {
     /* p2 staff start */
     p2.Body.call(this, {
-        mass: config.game.player.mass,
+        mass: constants.game.player.mass,
         position: [utils.math.randomInt(0, config.game.bounds.width), utils.math.randomInt(0, config.game.bounds.height)],
         type: p2.Body.DYNAMIC
     });
-    var playerShape = new p2.Circle({ radius: config.game.player.radius });
+    var playerShape = new p2.Circle({ radius: constants.game.player.radius });
     playerShape.collisionGroup = Math.pow(2, 0);
     playerShape.collisionMask = Math.pow(2, 0);
     this.addShape(playerShape);
     /* p2 staff end */
-    
-    this.speed = config.game.player.speed;
-    this.type = config.game.player.type;
+
+    this.pName = name;
+    this.speed = constants.game.player.speed;
+    this.type = constants.game.player.type;
 
     this.clientInfo = {
         id: this.id,
+        name: this.pName,
         position : {
             x: this.position[0],
             y: this.position[1]

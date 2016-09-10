@@ -24,32 +24,32 @@
     
     my.CheckMovement = function () { 
         if (keys['UP'].isDown || keys['W'].isDown) {
-            socket.emit("onUpKeyPressed", true);
+            socket.emit("c_OnUpKeyPressed", true);
         }
         else if (keys['DOWN'].isDown || keys['S'].isDown) {
-            socket.emit("onDownKeyPressed", true);
+            socket.emit("c_OnDownKeyPressed", true);
         }
         
         if (keys['LEFT'].isDown || keys['A'].isDown) {
-            socket.emit("onLeftKeyPressed", true);
+            socket.emit("c_OnLeftKeyPressed", true);
         }
         else if (keys['RIGHT'].isDown || keys['D'].isDown) {
-            socket.emit("onRightKeyPressed", true);
+            socket.emit("c_OnRightKeyPressed", true);
         }
         
         if (keys['SHIFT'].isDown) {
-            socket.emit("onShiftKeyPressed", true);
+            socket.emit("c_OnShiftKeyPressed", true);
         }
         
         if (keys['E'].isDown) {
-            socket.emit("onEKeyPressed", true);
+            socket.emit("c_OnEKeyPressed", true);
         }
         
         game.input.keyboard.onUpCallback = function (e) {
             if (e.keyCode == Phaser.Keyboard.SHIFT) {
-                socket.emit("onShiftKeyPressed", false);
+                socket.emit("c_OnShiftKeyPressed", false);
             } else if (e.keyCode == Phaser.Keyboard.E) {
-                socket.emit("onEKeyPressed", false);
+                socket.emit("c_OnEKeyPressed", false);
             }
         }
         

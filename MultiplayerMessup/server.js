@@ -1,63 +1,49 @@
 ﻿var config = require('./server/common/config.js');
 var constants = require('./server/common/constants.js');
+var PlayerManager = require('./server/core/playerManager.js');
+var GameManager = require('./server/core/gameManager.js');
+var SocketCommandManager = require('./server/core/socketCommandManager.js');
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
 var io = require('socket.io')(serv, {});
 var p2 = require('p2');
 
-var Player = require('./server/core/mobile/player.js');
-
-// Server props
-var lastTimeSeconds;
-var totalElapsedTimeFromSeconds = 0;
-
-// opening server
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 app.use('/public', express.static(__dirname + '/public'));
-serv.listen(process.env.PORT || config.server.port, function (s) {
 
-});
-
-io.on(constants.events.connect, function (socket) {
-    onPlayerConnect(socket, io);
-});
-
-var onPlayerConnect = function (socket, io) {   
-    //player is created
-    var player = new Player(socket); 
-    console.log(socket.handshake.query["name"] + " is connected to world.");
-    
-    //send playerInfo to the sender
-    socket.emit(constants.commands.createLocalPlayer, player.clientInfo);
-    
-    //send playerInfo to the all clients except sender
-    socket.broadcast.emit(constants.commands.createNewRemotePlayer, player.clientInfo);
-};
+// server props
+var lastTimeSeconds;
+var totalElapsedTimeFromSeconds = 0;
 
 // creating world
 var world = new p2.World({
     gravity: [0, 0]
 });
-// Turn off global gravity
-world.applyGravity = false;
+world.applyGravity = false;// Turn off global gravity
 
-//main game loop
+// opening server
+serv.listen(process.env.PORT || config.server.port, function (s) {
+
+});
+
+// player connected event
+io.on(constants.eventNames.connect, function (socket) {
+    PlayerManager.Init(socket);   
+});
+
+GameManager.Init(world);
+SocketCommandManager.Init(io);
+
+// main game loop
 setInterval(function () {
     totalElapsedTimeFromSeconds += config.server.serverProcessFrequency;
     var deltaTime = totalElapsedTimeFromSeconds - lastTimeSeconds;
-    
-    processWorld(deltaTime);        
-    
+
+    GameManager.ProcessWorld(deltaTime);
+    GameManager.UpdateTotalElapsedTimeFromSeconds(totalElapsedTimeFromSeconds);
     lastTimeSeconds = totalElapsedTimeFromSeconds;
 }, 1000 * config.server.serverProcessFrequency);
 
-var processWorld = function (deltaTime) {
-    try {
-        world.step(config.server.serverProcessFrequency, deltaTime, config.server.maxSubSteps);
-    } catch (e) {
-        logger.log("Error occurred at world.step(). message: " + e);
-    };
-};
