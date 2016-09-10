@@ -7,10 +7,10 @@ var GameManager = (function (my) {
     var io;
     var world;
     var bodyRemovalList = [];
-
+    
     var playerCount = 0;
     var totalElapsedTimeFromSeconds = 0;
-
+    
     var clearBodyRemovalList = function () {
         if (bodyRemovalList.length > 0) {
             for (var i = 0; i < bodyRemovalList.length; i++) {
@@ -24,29 +24,44 @@ var GameManager = (function (my) {
             bodyRemovalList = [];
         }
     };
-
-    var sendPosData = function () {
+    
+    var playerPositionsData = {};
+    var quePositionData = function () {
+        console.log("que");
         if (playerCount > 0) {
-            var playerPositionsData = {};
-
             for (var i = 0; i < world.bodies.length; i++) {
                 var body = world.bodies[i];
                 if (body.type = constants.game.player.type) {
                     var player = body;
-
-                    playerPositionsData[player.id] = {
-                        position: {
-                            x: player.position[0],
-                            y: player.position[1],
-                        },
-                        id: player.id
-                    };
+                    playerPositionData = playerPositionsData[player.id];
+                    if (playerPositionData) {
+                        playerPositionData.positions.push(
+                            {
+                                x: player.position[0],
+                                y: player.position[1]
+                            }
+                        );
+                    } else {
+                        playerPositionsData[player.id] = {
+                            positions: [{
+                                    x: player.position[0],
+                                    y: player.position[1],
+                                }],
+                            id: player.id
+                        };
+                    }
+                
                 }
             };
-
-            SocketCommandManager.UpdatePlayersPositions(playerPositionsData);
-            
         }
+    };
+    
+    var sendPosData = function () {
+        console.log("executed");
+        if (playerCount > 0) {
+            SocketCommandManager.UpdatePlayersPositions(playerPositionsData);
+        }
+        playerPositionsData = {};
     };
     
     var processPlayerMovements = function () {
@@ -56,10 +71,10 @@ var GameManager = (function (my) {
                 var body = world.bodies[i];
                 if (body.type = constants.game.player.type) {
                     var player = body;
-                    if (player.movementStates.isMovingUp) { 
+                    if (player.movementStates.isMovingUp) {
                         player.position[1] -= player.speed;
                     }
-                    if (player.movementStates.isMovingDown) { 
+                    if (player.movementStates.isMovingDown) {
                         player.position[1] += player.speed;
                     }
                     if (player.movementStates.isMovingLeft) {
@@ -69,21 +84,21 @@ var GameManager = (function (my) {
                         player.position[0] += player.speed;
                     }
                 }
-            };                                    
+            };
         }
     };
-
+    
     my.RemovePlayerFromWorld = function (player) {
         bodyRemovalList.push(player);
     };
-
+    
     my.AddPlayerToWorld = function (player) {
         world.addBody(player);
         logger.info(player.pName + " is added to world.");
         playerCount++;
         return player;
     };
-
+    
     my.ProcessWorld = function (deltaTime) {
         try {
             world.step(config.server.serverProcessFrequency, deltaTime, config.server.maxSubSteps);
@@ -92,21 +107,22 @@ var GameManager = (function (my) {
         };
         
         processPlayerMovements();
-
-        clearBodyRemovalList();
-
+        
+        clearBodyRemovalList();        
+        
+        utils.timerMechanics.executeByIntervalFromSeconds(totalElapsedTimeFromSeconds, config.server.quePositionDataFrequencyFromSeconds, quePositionData);
         utils.timerMechanics.executeByIntervalFromSeconds(totalElapsedTimeFromSeconds, config.server.positionUpdateFrequencyFromSeconds, sendPosData);
     };
-
+    
     my.UpdateTotalElapsedTimeFromSeconds = function (elapsedTime) {
         totalElapsedTimeFromSeconds = elapsedTime;
     };
-
+    
     my.Init = function (_world) {
         world = _world;
     };
-
+    
     return my;
-} (GameManager || {}));
+}(GameManager || {}));
 
 module.exports = GameManager;
