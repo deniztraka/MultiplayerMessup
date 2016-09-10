@@ -69,7 +69,7 @@ var InputManager = (function (my) {
         //});
         //socket.on(Constants.CommandNames.MousePosition, function (mousePos) {
         //    updateRotation(player, mousePos);
-        //}); 
+        //});
 
         //attach movement events
         socket.on("c_OnUpKeyPressed", function () {
@@ -84,9 +84,9 @@ var InputManager = (function (my) {
         socket.on("c_OnRightKeyPressed", function () {
             onRightKeyPressed(player);
         });
-        socket.on("c_OnShiftKeyPressed", function (isDown) {
-            onShiftKeyPressed(player, isDown);
-        });
+        //socket.on("c_OnShiftKeyPressed", function (isDown) {
+        //    onShiftKeyPressed(player, isDown);
+        //});
 
     };
 
