@@ -7,10 +7,10 @@ var GameManager = (function (my) {
     var io;
     var world;
     var bodyRemovalList = [];
-    
+
     var playerCount = 0;
     var totalElapsedTimeFromSeconds = 0;
-    
+
     var clearBodyRemovalList = function () {
         if (bodyRemovalList.length > 0) {
             for (var i = 0; i < bodyRemovalList.length; i++) {
@@ -24,10 +24,9 @@ var GameManager = (function (my) {
             bodyRemovalList = [];
         }
     };
-    
+
     var playerPositionsData = {};
     var quePositionData = function () {
-        console.log("que");
         if (playerCount > 0) {
             for (var i = 0; i < world.bodies.length; i++) {
                 var body = world.bodies[i];
@@ -44,29 +43,27 @@ var GameManager = (function (my) {
                     } else {
                         playerPositionsData[player.id] = {
                             positions: [{
-                                    x: player.position[0],
-                                    y: player.position[1],
-                                }],
+                                x: player.position[0],
+                                y: player.position[1],
+                            }],
                             id: player.id
                         };
                     }
-                
                 }
             };
         }
     };
-    
+
     var sendPosData = function () {
-        console.log("executed");
         if (playerCount > 0) {
             SocketCommandManager.UpdatePlayersPositions(playerPositionsData);
         }
         playerPositionsData = {};
     };
-    
+
     var processPlayerMovements = function () {
         if (playerCount > 0) {
-            
+
             for (var i = 0; i < world.bodies.length; i++) {
                 var body = world.bodies[i];
                 if (body.type = constants.game.player.type) {
@@ -87,42 +84,42 @@ var GameManager = (function (my) {
             };
         }
     };
-    
+
     my.RemovePlayerFromWorld = function (player) {
         bodyRemovalList.push(player);
     };
-    
+
     my.AddPlayerToWorld = function (player) {
         world.addBody(player);
         logger.info(player.pName + " is added to world.");
         playerCount++;
         return player;
     };
-    
+
     my.ProcessWorld = function (deltaTime) {
         try {
             world.step(config.server.serverProcessFrequency, deltaTime, config.server.maxSubSteps);
         } catch (e) {
             logger.error("Error occurred at world.step(). message: ", e);
         };
-        
+
         processPlayerMovements();
-        
-        clearBodyRemovalList();        
-        
+
+        clearBodyRemovalList();
+
         utils.timerMechanics.executeByIntervalFromSeconds(totalElapsedTimeFromSeconds, config.server.quePositionDataFrequencyFromSeconds, quePositionData);
         utils.timerMechanics.executeByIntervalFromSeconds(totalElapsedTimeFromSeconds, config.server.positionUpdateFrequencyFromSeconds, sendPosData);
     };
-    
+
     my.UpdateTotalElapsedTimeFromSeconds = function (elapsedTime) {
         totalElapsedTimeFromSeconds = elapsedTime;
     };
-    
+
     my.Init = function (_world) {
         world = _world;
     };
-    
+
     return my;
-}(GameManager || {}));
+} (GameManager || {}));
 
 module.exports = GameManager;

@@ -10,7 +10,7 @@ var PlayerManager = (function (my) {
     var player;
 
     var disconnectPlayer = function () {
-        SocketCommandManager.RemovePlayer(socket, player.clientInfo);        
+        SocketCommandManager.RemovePlayer(socket, player.clientInfo);
         GameManager.RemovePlayerFromWorld(player);
     };
 
@@ -27,8 +27,8 @@ var PlayerManager = (function (my) {
     my.Init = function (_socket) {
         socket = _socket;
 
-        //Initializing connected player        
-        var player = new Player(socket.handshake.query["name"]);
+        //Initializing connected player
+        player = new Player(socket.handshake.query["name"]);
         GameManager.AddPlayerToWorld(player);
 
         SocketCommandManager.CreateLocalPlayer(socket, player.clientInfo);

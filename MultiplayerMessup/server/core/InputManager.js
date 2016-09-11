@@ -5,20 +5,20 @@ var InputManager = (function (my) {
     var socket;
     var player;
 
-    var onUpKeyPressed = function (isDown) {        
+    var onUpKeyPressed = function (isDown) {
         player.movementStates.isMovingUp = isDown;
     };
 
     var onDownKeyPressed = function (isDown) {
-        player.movementStates.isMovingDown = isDown;        
+        player.movementStates.isMovingDown = isDown;
     };
 
     var onLeftKeyPressed = function (isDown) {
-        player.movementStates.isMovingLeft = isDown;        
+        player.movementStates.isMovingLeft = isDown;
     };
 
     var onRightKeyPressed = function (isDown) {
-        player.movementStates.isMovingRight = isDown;        
+        player.movementStates.isMovingRight = isDown;
     };
 
     //var onMouseClicked = function (player, mousePosition) {
