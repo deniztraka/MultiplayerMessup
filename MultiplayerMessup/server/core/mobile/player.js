@@ -14,7 +14,11 @@ var player = function (name) {
     playerShape.collisionMask = Math.pow(2, 0);
     this.addShape(playerShape);
     /* p2 staff end */
-    
+
+    this.mousePosition = {
+        x: 0,
+        y: 0
+    }
     this.movementStates = {
         isMovingUp: false,
         isMovingDown: false,
@@ -22,18 +26,18 @@ var player = function (name) {
         isMovingRight: false
     }
 
-this.pName = name;
-this.speed = constants.game.player.speed;
-this.type = constants.game.player.type;
+    this.pName = name;
+    this.speed = constants.game.player.speed;
+    this.type = constants.game.player.type;
 
-this.clientInfo = {
-id: this.id,
+    this.clientInfo = {
+        id: this.id,
         name: this.pName,
-position : {
-x: this.position[0],
-y: this.position[1]
-}       
-};
+        position: {
+            x: this.position[0],
+            y: this.position[1]
+        }
+    };
 };
 
 player.prototype = Object.create(p2.Body.prototype);

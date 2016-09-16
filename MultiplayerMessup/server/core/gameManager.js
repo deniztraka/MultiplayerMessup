@@ -25,27 +25,29 @@ var GameManager = (function (my) {
         }
     };
 
-    var playerPositionsData = {};
-    var quePositionData = function () {
+    var playersPositionsAndRotationsData = {};
+    var quePositionAndRotationData = function () {
         if (playerCount > 0) {
             for (var i = 0; i < world.bodies.length; i++) {
                 var body = world.bodies[i];
                 if (body.type = constants.game.player.type) {
                     var player = body;
-                    playerPositionData = playerPositionsData[player.id];
-                    if (playerPositionData) {
-                        playerPositionData.positions.push(
+
+                    if (playersPositionsAndRotationsData[player.id]) {
+                        playersPositionsAndRotationsData[player.id].positions.push(
                             {
                                 x: player.position[0],
                                 y: player.position[1]
                             }
                         );
+                        playersPositionsAndRotationsData[player.id].rotations.push(player.angle);
                     } else {
-                        playerPositionsData[player.id] = {
+                        playersPositionsAndRotationsData[player.id] = {
                             positions: [{
                                 x: player.position[0],
                                 y: player.position[1],
                             }],
+                            rotations: [player.angle],
                             id: player.id
                         };
                     }
@@ -54,20 +56,23 @@ var GameManager = (function (my) {
         }
     };
 
-    var sendPosData = function () {
+    var sendPosAndRotData = function () {
         if (playerCount > 0) {
-            SocketCommandManager.UpdatePlayersPositions(playerPositionsData);
+            SocketCommandManager.UpdatePlayersPositionsAndRotations(playersPositionsAndRotationsData);
         }
-        playerPositionsData = {};
+        playersPositionsAndRotationsData = {};
     };
 
-    var processPlayerMovements = function () {
+    var processPlayerMovementsAndRotations = function () {
         if (playerCount > 0) {
 
             for (var i = 0; i < world.bodies.length; i++) {
                 var body = world.bodies[i];
                 if (body.type = constants.game.player.type) {
                     var player = body;
+
+                    player.angle = Math.getAngle({ x: player.position[0], y: player.position[1] }, { x: player.mousePosition.x, y: player.mousePosition.y });
+                    //logger.debug(player.mousePosition.x + " " + player.mousePosition.y + " " + Math.toDegrees(player.angle));
                     if (player.movementStates.isMovingUp) {
                         player.position[1] -= player.speed;
                     }
@@ -103,12 +108,12 @@ var GameManager = (function (my) {
             logger.error("Error occurred at world.step(). message: ", e);
         };
 
-        processPlayerMovements();
+        processPlayerMovementsAndRotations();
 
         clearBodyRemovalList();
 
-        utils.timerMechanics.executeByIntervalFromSeconds(totalElapsedTimeFromSeconds, config.server.quePositionDataFrequencyFromSeconds, quePositionData);
-        utils.timerMechanics.executeByIntervalFromSeconds(totalElapsedTimeFromSeconds, config.server.positionUpdateFrequencyFromSeconds, sendPosData);
+        utils.timerMechanics.executeByIntervalFromSeconds(totalElapsedTimeFromSeconds, config.server.quePositionAndRotationDataFrequencyFromSeconds, quePositionAndRotationData);
+        utils.timerMechanics.executeByIntervalFromSeconds(totalElapsedTimeFromSeconds, config.server.positionAndRotationUpdateFrequencyFromSeconds, sendPosAndRotData);
     };
 
     my.UpdateTotalElapsedTimeFromSeconds = function (elapsedTime) {

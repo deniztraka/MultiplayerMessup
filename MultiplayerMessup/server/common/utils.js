@@ -6,6 +6,24 @@
     return size;
 };
 
+// Converts from degrees to radians.
+Math.toRadians = function (degrees) {
+    return degrees * Math.PI / 180;
+};
+
+// Converts from radians to degrees.
+Math.toDegrees = function (radians) {
+    return radians * 180 / Math.PI;
+};
+
+// Converts from radians to degrees.
+Math.getAngle = function (pointOne, pointTwo) {
+    var deltaY = pointTwo.y - pointOne.y;
+    var deltaX = pointTwo.x - pointOne.x;
+
+    return Math.atan2(deltaY, deltaX);
+};
+
 var config = require('./config.js');
 
 module.exports = {

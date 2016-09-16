@@ -3,8 +3,8 @@
         port: 5000,
         serverProcessFrequency: 1/60,
         maxSubSteps: 30,
-        positionUpdateFrequencyFromSeconds: 1 / 10 ,
-        quePositionDataFrequencyFromSeconds: 1 / 30
+        positionAndRotationUpdateFrequencyFromSeconds: 1 / 10 ,
+        quePositionAndRotationDataFrequencyFromSeconds: 1 / 30
     },
     game: {
         bounds: {

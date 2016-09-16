@@ -1,4 +1,4 @@
-﻿GameStates.Game = function (game) {  
+﻿GameStates.Game = function (game) {
 };
 
 var socket;
@@ -17,19 +17,20 @@ GameStates.Game.prototype = {
     },
     create: function () {
         var self = this;
-        GameEngine.Init(self);                      
+        GameEngine.Init(self);
         self.buildWorld();
 
         socket = io(window.location.origin, { query: 'name=' + self.playerName });
-        ServerEvents.Init(socket,self);
-            
-        InputManager.Init(self,socket);
+        ServerEvents.Init(socket, self);
+
+        InputManager.Init(self, socket);
     },
 
     update: function () {
         InputManager.CheckMovement();
+        InputManager.CheckMousePosition();
     },
-    
+
     render: function () { },
 
     resize: function () {
@@ -41,7 +42,7 @@ GameStates.Game.prototype = {
 
         game.world.setBounds(0, 0, 1920, 1920);
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        
+
         game.scale.pageAlignHorizontally = true;
         game.scale.pageAlignVertically = true;
         // using RESIZE scale mode

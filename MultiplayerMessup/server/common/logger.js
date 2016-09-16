@@ -2,6 +2,10 @@
 var colors = require('colors');
 
 module.exports = {
+    debug: function (message) {
+        console.log((utils.time.getDateTimeText()).gray + (" DEBUG ==> " + message).gray);
+    },
+
     info: function (message) {
         console.log((utils.time.getDateTimeText()).gray + (" INFO ==> " + message).white);
     },

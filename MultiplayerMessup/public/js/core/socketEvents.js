@@ -7,8 +7,8 @@
             GameEngine.CreateLocalPlayer(playerData);
         });
 
-        socket.on("s_UpdatePlayerPositions", function (playerPositionsDatas) {
-            GameEngine.UpdatePlayerPositions(playerPositionsDatas);            
+        socket.on("s_UpdatePlayerPositionsAndRotations", function (playerPositionsAndRotationsDatas) {
+            GameEngine.UpdatePlayerPositionsAndRotations(playerPositionsAndRotationsDatas);
         });
 
 

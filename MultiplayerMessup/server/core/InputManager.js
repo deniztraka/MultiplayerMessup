@@ -21,6 +21,9 @@ var InputManager = (function (my) {
         player.movementStates.isMovingRight = isDown;
     };
 
+    var updateRotation = function (mousePosition) {
+        player.mousePosition = mousePosition;
+    };
     //var onMouseClicked = function (player, mousePosition) {
     //    var canSlash = attack(player);
     //    if (canSlash) {
@@ -67,9 +70,9 @@ var InputManager = (function (my) {
         //socket.on(Constants.EventNames.OnEKeyPressed, function (isDown) {
         //    onEKeyPressed(player, isDown);
         //});
-        //socket.on(Constants.CommandNames.MousePosition, function (mousePos) {
-        //    updateRotation(player, mousePos);
-        //});
+        socket.on("c_MousePosition", function (mousePos) {
+            updateRotation(mousePos);
+        });
 
         //attach movement events
         socket.on("c_OnUpKeyPressed", function (isDown) {

@@ -1,9 +1,9 @@
 ﻿var SocketCommandManager = (function (my) {
     var io;
 
-    //sending s_UpdatePlayerPositions command to every socket
-    my.UpdatePlayersPositions = function (playerPositionsData) {
-        io.emit("s_UpdatePlayerPositions", playerPositionsData);
+    //sending s_UpdatePlayerPositionsAndRotations command to every socket
+    my.UpdatePlayersPositionsAndRotations = function (playerPositionsAndRotationsData) {
+        io.emit("s_UpdatePlayerPositionsAndRotations", playerPositionsAndRotationsData);
     };
 
     //sending playerInfo to the this socket only
