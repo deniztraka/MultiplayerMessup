@@ -6,11 +6,14 @@
     };
 
     my.CreateLocalPlayer = function (playerData) {
-        var player = game.add.sprite(playerData.position.x, playerData.position.y, 'player');
-        player.anchor.setTo(0.5, 0.5);
-        game.camera.follow(player);
+        var localPlayer = new ClientPlayer(game,playerData.id, playerData.name, playerData.position);
+        game.camera.follow(localPlayer.sprite);
+        playerList[playerData.id] = localPlayer;
+    };
 
-        playerList[playerData.id] = player;
+    my.CreateNewRemotePlayer = function (playerData) {
+        var newLoggedInPlayer = new ClientPlayer(game, playerData.id, playerData.name, playerData.position);
+        playerList[playerData.id] = newLoggedInPlayer;
     };
 
     my.UpdatePlayerPositionsAndRotations = function (playerPositionsAndRotationsDatas) {
@@ -19,20 +22,26 @@
             var player = playerList[id];
 
             if (playerPositionAndRotationData.positions.length == 3) {
-                game.add.tween(player).to(
+                var pos0 = playerPositionAndRotationData.positions[0];
+                var pos1 = playerPositionAndRotationData.positions[1];
+                var pos2 = playerPositionAndRotationData.positions[2];
+
+                game.add.tween(player.sprite).to(
                     {
-                        x: [playerPositionAndRotationData.positions[0].x, playerPositionAndRotationData.positions[1].x, playerPositionAndRotationData.positions[2].x],
-                        y: [playerPositionAndRotationData.positions[0].y, playerPositionAndRotationData.positions[1].y, playerPositionAndRotationData.positions[2].y]
+                        x: [pos0.x, pos1.x, pos2.x],
+                        y: [pos0.y, pos1.y, pos2.y]
                     }, 1000 / 10, Phaser.Easing.Linear.None, true);
             }
 
             if (playerPositionAndRotationData.rotations.length == 3) {
-                //game.add.tween(player).to({ rotation: [30, 60, 90] }, 1000 / 10, Phaser.Easing.Linear.None, true);
-                game.add.tween(player).to({ rotation: [playerPositionAndRotationData.rotations[0], playerPositionAndRotationData.rotations[1], playerPositionAndRotationData.rotations[2]] }, 1000 / 10, Phaser.Easing.Linear.None, true);
-//                console.log(" 0:" + playerPositionAndRotationData.rotations[0] + " 1:" + playerPositionAndRotationData.rotations[1] + " 2:" + playerPositionAndRotationData.rotations[2]);
+                var rot0 = playerPositionAndRotationData.rotations[0];
+                var rot1 = playerPositionAndRotationData.rotations[1];
+                var rot2 = playerPositionAndRotationData.rotations[2];
+
+                game.add.tween(player.sprite).to({ rotation: [rot0, rot1, rot2] }, 1000 / 10, Phaser.Easing.Linear.None, true);
             }
         }
     };
 
     return my;
-}(GameEngine || {}));
+} (GameEngine || {}));

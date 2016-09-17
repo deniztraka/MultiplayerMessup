@@ -12,9 +12,9 @@
         });
 
 
-        //socket.on("c_CreateNewRemotePlayer", function (playerData) {
-        //    //createNewRemotePlayer(game, socket, playerData);
-        //});
+        socket.on("c_CreateNewRemotePlayer", function (playerData) {
+            GameEngine.CreateNewRemotePlayer(playerData);
+        });
     };
 
     my.Init = function (_socket, _game) {

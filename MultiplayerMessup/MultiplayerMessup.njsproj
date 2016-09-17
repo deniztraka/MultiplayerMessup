@@ -34,6 +34,7 @@
     <Compile Include="public\js\boot.js" />
     <Compile Include="public\js\core\engine.js" />
     <Compile Include="public\js\core\inputManager.js" />
+    <Compile Include="public\js\core\mobile\clientPlayer.js" />
     <Compile Include="public\js\core\socketEvents.js" />
     <Compile Include="public\js\game.js" />
     <Compile Include="public\js\mainmenu.js" />
@@ -63,6 +64,7 @@
     <Folder Include="public\assets\sprites\tiles\" />
     <Folder Include="public\assets\sprites\player\" />
     <Folder Include="public\js\core\" />
+    <Folder Include="public\js\core\mobile\" />
     <Folder Include="public\libs\" />
     <Folder Include="server\" />
     <Folder Include="public\" />
