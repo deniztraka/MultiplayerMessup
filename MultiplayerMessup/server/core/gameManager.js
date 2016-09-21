@@ -119,6 +119,21 @@ var GameManager = (function (my) {
     my.UpdateTotalElapsedTimeFromSeconds = function (elapsedTime) {
         totalElapsedTimeFromSeconds = elapsedTime;
     };
+    
+    my.GetPlayerList = function () {
+        var playerList = []; 
+        if (playerCount > 0) {
+            for (var i = 0; i < world.bodies.length; i++) {
+                var body = world.bodies[i];
+                if (body.type = constants.game.player.type) {
+                    var player = body;
+                    playerList.push(player.clientInfo);            
+                }
+            };
+        }
+
+        return playerList;
+    };
 
     my.Init = function (_world) {
         world = _world;

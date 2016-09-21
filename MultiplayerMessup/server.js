@@ -31,7 +31,7 @@ serv.listen(process.env.PORT || config.server.port, function (s) {
 
 // player connected event
 io.on(constants.eventNames.connect, function (socket) {
-    PlayerManager.Init(socket);   
+    var playerManager = new PlayerManager(socket);   
 });
 
 GameManager.Init(world);

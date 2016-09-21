@@ -1,26 +1,26 @@
 ﻿var constants = require('../common/constants.js');
 var logger = require('../common/logger.js');
 
-var InputManager = (function (my) {
-    var socket;
-    var player;
-
-    var onUpKeyPressed = function (isDown) {
+var InputManager = function (_socket, _player) {
+    var socket = _socket;
+    var player = _player;
+    
+    var onUpKeyPressed = function (isDown) {        
         player.movementStates.isMovingUp = isDown;
     };
-
+    
     var onDownKeyPressed = function (isDown) {
         player.movementStates.isMovingDown = isDown;
     };
-
+    
     var onLeftKeyPressed = function (isDown) {
         player.movementStates.isMovingLeft = isDown;
     };
-
+    
     var onRightKeyPressed = function (isDown) {
         player.movementStates.isMovingRight = isDown;
     };
-
+    
     var updateRotation = function (mousePosition) {
         player.mousePosition = mousePosition;
     };
@@ -30,7 +30,7 @@ var InputManager = (function (my) {
     //        processSlash(player, mousePosition);
     //    }
     //};
-
+    
     //var onShiftKeyPressed = function (player, isDown) {
     //    player.isRunning = isDown;
     //    if (isDown) {
@@ -57,12 +57,12 @@ var InputManager = (function (my) {
     //        player.speed = serverConfig.gamePlay.movementSpeed;
     //    }
     //};
-
+    
     //var updateRotation = function (player, mousePosition) {
     //    player.angle = Math.atan2(mousePosition.x - player.weapon.position[0], -(mousePosition.y - player.weapon.position[1]));
     //};
-
-    my.CreateSocketEvents = function () {
+    
+    this.CreateSocketEvents = function () {
         //attach player action events
         //socket.on(Constants.EventNames.OnMouseClicked, function (mousePosition) {
         //    onMouseClicked(player, mousePosition);
@@ -73,7 +73,7 @@ var InputManager = (function (my) {
         socket.on("c_MousePosition", function (mousePos) {
             updateRotation(mousePos);
         });
-
+        
         //attach movement events
         socket.on("c_OnUpKeyPressed", function (isDown) {
             onUpKeyPressed(isDown);
@@ -91,14 +91,7 @@ var InputManager = (function (my) {
         //    onShiftKeyPressed(player, isDown);
         //});
 
-    };
-
-    my.Init = function (_socket, _player) {
-        socket = _socket;
-        player = _player;
-    };
-
-    return my;
-} (InputManager || {}));
+    };        
+};
 
 module.exports = InputManager;
