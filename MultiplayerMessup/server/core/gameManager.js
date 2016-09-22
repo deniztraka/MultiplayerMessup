@@ -7,10 +7,10 @@ var GameManager = (function (my) {
     var io;
     var world;
     var bodyRemovalList = [];
-
+    
     var playerCount = 0;
     var totalElapsedTimeFromSeconds = 0;
-
+    
     var clearBodyRemovalList = function () {
         if (bodyRemovalList.length > 0) {
             for (var i = 0; i < bodyRemovalList.length; i++) {
@@ -24,7 +24,7 @@ var GameManager = (function (my) {
             bodyRemovalList = [];
         }
     };
-
+    
     var playersPositionsAndRotationsData = {};
     var quePositionAndRotationData = function () {
         if (playerCount > 0) {
@@ -32,7 +32,7 @@ var GameManager = (function (my) {
                 var body = world.bodies[i];
                 if (body.type = constants.game.player.type) {
                     var player = body;
-
+                    
                     if (playersPositionsAndRotationsData[player.id]) {
                         playersPositionsAndRotationsData[player.id].positions.push(
                             {
@@ -44,9 +44,9 @@ var GameManager = (function (my) {
                     } else {
                         playersPositionsAndRotationsData[player.id] = {
                             positions: [{
-                                x: player.position[0],
-                                y: player.position[1],
-                            }],
+                                    x: player.position[0],
+                                    y: player.position[1],
+                                }],
                             rotations: [player.angle],
                             id: player.id
                         };
@@ -55,91 +55,103 @@ var GameManager = (function (my) {
             };
         }
     };
-
+    
     var sendPosAndRotData = function () {
         if (playerCount > 0) {
             SocketCommandManager.UpdatePlayersPositionsAndRotations(playersPositionsAndRotationsData);
         }
         playersPositionsAndRotationsData = {};
     };
-
+    
+    var setPlayerZone = function (player, isMovingHorizontal) {
+        if (isMovingHorizontal) {
+            player.zone.x = Math.floor(player.position[0] / config.server.zoneSize.width);
+        } else {
+            player.zone.y = Math.floor(player.position[1] / config.server.zoneSize.height);
+        }
+        //logger.debug("zone: {x: " + player.zone.x + ", y: " + player.zone.y + "}");
+    };
+    
     var processPlayerMovementsAndRotations = function () {
-        if (playerCount > 0) {
-
+        if (playerCount > 0) {            
             for (var i = 0; i < world.bodies.length; i++) {
                 var body = world.bodies[i];
                 if (body.type = constants.game.player.type) {
                     var player = body;
-
+                    
                     player.angle = Math.getAngle({ x: player.position[0], y: player.position[1] }, { x: player.mousePosition.x, y: player.mousePosition.y });
-                    //logger.debug(player.mousePosition.x + " " + player.mousePosition.y + " " + Math.toDegrees(player.angle));
+                    
                     if (player.movementStates.isMovingUp) {
                         player.position[1] -= player.speed;
+                        setPlayerZone(player, false);
                     }
                     if (player.movementStates.isMovingDown) {
                         player.position[1] += player.speed;
+                        setPlayerZone(player, false);
                     }
                     if (player.movementStates.isMovingLeft) {
                         player.position[0] -= player.speed;
+                        setPlayerZone(player, true);
                     }
                     if (player.movementStates.isMovingRight) {
                         player.position[0] += player.speed;
+                        setPlayerZone(player, true);
                     }
                 }
             };
         }
     };
-
+    
     my.RemovePlayerFromWorld = function (player) {
         bodyRemovalList.push(player);
     };
-
+    
     my.AddPlayerToWorld = function (player) {
         world.addBody(player);
         logger.info(player.pName + " is added to world.");
         playerCount++;
         return player;
     };
-
+    
     my.ProcessWorld = function (deltaTime) {
         try {
             world.step(config.server.serverProcessFrequency, deltaTime, config.server.maxSubSteps);
         } catch (e) {
             logger.error("Error occurred at world.step(). message: ", e);
         };
-
+        
         processPlayerMovementsAndRotations();
-
+        
         clearBodyRemovalList();
-
+        
         utils.timerMechanics.executeByIntervalFromSeconds(totalElapsedTimeFromSeconds, config.server.quePositionAndRotationDataFrequencyFromSeconds, quePositionAndRotationData);
         utils.timerMechanics.executeByIntervalFromSeconds(totalElapsedTimeFromSeconds, config.server.positionAndRotationUpdateFrequencyFromSeconds, sendPosAndRotData);
     };
-
+    
     my.UpdateTotalElapsedTimeFromSeconds = function (elapsedTime) {
         totalElapsedTimeFromSeconds = elapsedTime;
     };
     
     my.GetPlayerList = function () {
-        var playerList = []; 
+        var playerList = [];
         if (playerCount > 0) {
             for (var i = 0; i < world.bodies.length; i++) {
                 var body = world.bodies[i];
                 if (body.type = constants.game.player.type) {
                     var player = body;
-                    playerList.push(player.clientInfo);            
+                    playerList.push(player.clientInfo);
                 }
             };
         }
-
+        
         return playerList;
     };
-
+    
     my.Init = function (_world) {
         world = _world;
     };
-
+    
     return my;
-} (GameManager || {}));
+}(GameManager || {}));
 
 module.exports = GameManager;
