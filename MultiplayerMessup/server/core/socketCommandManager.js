@@ -4,6 +4,11 @@
     //sending s_UpdatePlayerPositionsAndRotations command to every socket
     my.UpdatePlayersPositionsAndRotations = function (playerPositionsAndRotationsData) {
         io.emit("s_UpdatePlayerPositionsAndRotations", playerPositionsAndRotationsData);
+       
+    };
+    
+    my.UpdateClosePlayersPositionsAndRotations = function (socket, playerPositionsAndRotationsData) {
+        socket.emit("s_UpdatePlayerPositionsAndRotations", playerPositionsAndRotationsData);
     };
     
     //sending playerInfo to this socket only

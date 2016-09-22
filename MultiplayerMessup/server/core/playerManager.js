@@ -31,7 +31,7 @@ var PlayerManager = function (_socket) {
             
             //Initializing connected player
             player = new Player(socket.handshake.query["name"]);
-            GameManager.AddPlayerToWorld(player);
+            GameManager.AddPlayerToWorld(player,socket);
             
             SocketCommandManager.CreateLocalPlayer(socket, player.clientInfo);
             SocketCommandManager.CreateNewRemotePlayer(socket, player.clientInfo);

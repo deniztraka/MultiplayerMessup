@@ -1,4 +1,5 @@
-﻿var config = require('../common/config.js');
+﻿var _ = require('underscore');
+var config = require('../common/config.js');
 var constants = require('../common/constants.js');
 var logger = require('../common/logger.js');
 var utils = require('../common/utils.js');
@@ -7,6 +8,7 @@ var GameManager = (function (my) {
     var io;
     var world;
     var bodyRemovalList = [];
+    var playerSocketDictionary = {};
     
     var playerCount = 0;
     var totalElapsedTimeFromSeconds = 0;
@@ -40,6 +42,7 @@ var GameManager = (function (my) {
                                 y: player.position[1]
                             }
                         );
+                        playersPositionsAndRotationsData[player.id].zones.push(player.zone);
                         playersPositionsAndRotationsData[player.id].rotations.push(player.angle);
                     } else {
                         playersPositionsAndRotationsData[player.id] = {
@@ -48,6 +51,7 @@ var GameManager = (function (my) {
                                     y: player.position[1],
                                 }],
                             rotations: [player.angle],
+                            zones: [player.zone],
                             id: player.id
                         };
                     }
@@ -56,9 +60,56 @@ var GameManager = (function (my) {
         }
     };
     
+    var getClosePlayersData = function (player) {
+        var data = {};
+        for (var key in playersPositionsAndRotationsData) {
+            
+            var playerData = playersPositionsAndRotationsData[key];
+            if (playerData.zones.length == 3) {
+                var closeZonesArrayData = [
+                    player.zone.x + "," + player.zone.y,
+                    player.zone.x - 1 + "," + player.zone.y,
+                    player.zone.x - 1 + "," + player.zone.y - 1,
+                    player.zone.x + "," + player.zone.y - 1,
+                    player.zone.x + 1 + "," + player.zone.y - 1,
+                    player.zone.x + 1 + "," + player.zone.y,
+                    player.zone.x + 1 + "," + player.zone.y + 1,
+                    player.zone.x + "," + player.zone.y + 1,
+                    player.zone.x - 1 + "," + player.zone.y + 1,
+                ];
+                
+                var playerZonesArrayData = [
+                    playerData.zones[0].x + "," + playerData.zones[0].y,
+                    playerData.zones[1].x + "," + playerData.zones[1].y,
+                    playerData.zones[2].x + "," + playerData.zones[2].y,
+                ];
+                
+                
+                var intersectionZones = _.intersection(closeZonesArrayData, playerZonesArrayData);
+                if (intersectionZones.length > 0) {
+                    data[key] = playersPositionsAndRotationsData[key];
+                }
+            }
+        }
+        return data;
+    };
+    
     var sendPosAndRotData = function () {
         if (playerCount > 0) {
-            SocketCommandManager.UpdatePlayersPositionsAndRotations(playersPositionsAndRotationsData);
+            if (config.server.vicinityUpdate) {
+                //send for each player vicinity
+                for (var key in playerSocketDictionary) {
+                    var player = playerSocketDictionary[key][0];
+                    if (player) {
+                        var socket = playerSocketDictionary[key][1];
+                        
+                        var vicinityData = getClosePlayersData(player);
+                        SocketCommandManager.UpdateClosePlayersPositionsAndRotations(socket, vicinityData);
+                    }
+                }
+            } else {
+                SocketCommandManager.UpdatePlayersPositionsAndRotations(playersPositionsAndRotationsData);
+            }
         }
         playersPositionsAndRotationsData = {};
     };
@@ -73,7 +124,7 @@ var GameManager = (function (my) {
     };
     
     var processPlayerMovementsAndRotations = function () {
-        if (playerCount > 0) {            
+        if (playerCount > 0) {
             for (var i = 0; i < world.bodies.length; i++) {
                 var body = world.bodies[i];
                 if (body.type = constants.game.player.type) {
@@ -104,10 +155,12 @@ var GameManager = (function (my) {
     
     my.RemovePlayerFromWorld = function (player) {
         bodyRemovalList.push(player);
+        delete playerSocketDictionary[player.id];
     };
     
-    my.AddPlayerToWorld = function (player) {
+    my.AddPlayerToWorld = function (player, socket) {
         world.addBody(player);
+        playerSocketDictionary[player.id] = [player, socket];
         logger.info(player.pName + " is added to world.");
         playerCount++;
         return player;
