@@ -9,6 +9,7 @@ var serv = require('http').Server(app);
 var io = require('socket.io')(serv, {});
 var p2 = require('p2');
 
+
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
@@ -20,9 +21,17 @@ var totalElapsedTimeFromSeconds = 0;
 
 // creating world
 var world = new p2.World({
-    gravity: [0, 0]
+    gravity: [0, 0],
+    islandSplit: true
 });
-world.applyGravity = false;// Turn off global gravity
+world.solver = new p2.GSSolver();
+//world.solver.iterations = 5; // Fast, but contacts might look squishy...
+world.solver.iterations = 25;
+//world.solver.iterations = 50; // Slow, but contacts look good!
+world.solver.tolerance = 0.01;
+
+GameManager.Init(world);
+SocketCommandManager.Init(io);
 
 // opening server
 serv.listen(process.env.PORT || config.server.port, function (s) {
@@ -31,11 +40,8 @@ serv.listen(process.env.PORT || config.server.port, function (s) {
 
 // player connected event
 io.on(constants.eventNames.connect, function (socket) {
-    var playerManager = new PlayerManager(socket);   
+    var playerManager = new PlayerManager(socket);
 });
-
-GameManager.Init(world);
-SocketCommandManager.Init(io);
 
 // main game loop
 setInterval(function () {
@@ -46,4 +52,3 @@ setInterval(function () {
     GameManager.UpdateTotalElapsedTimeFromSeconds(totalElapsedTimeFromSeconds);
     lastTimeSeconds = totalElapsedTimeFromSeconds;
 }, 1000 * config.server.serverProcessFrequency);
-

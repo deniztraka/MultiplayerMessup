@@ -10,13 +10,13 @@
         socket.on("s_UpdatePlayerPositionsAndRotations", function (playerPositionsAndRotationsDatas) {
             GameEngine.UpdatePlayerPositionsAndRotations(playerPositionsAndRotationsDatas);
         });
-        
-        socket.on("s_CreateAlreadyLoggedInPlayers", function (playerList) {            
+
+        socket.on("s_CreateAlreadyLoggedInPlayers", function (playerList) {
             for (var i = 0; i < playerList.length; i++) {
                 GameEngine.CreateNewRemotePlayer(playerList[i]);
             };
         });
-        
+
         socket.on("s_RemovePlayer", function (playerData) {
             GameEngine.RemovePlayer(playerData);
         });

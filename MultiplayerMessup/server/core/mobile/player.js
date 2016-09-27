@@ -2,13 +2,15 @@
 var constants = require('../../common/constants.js');
 var utils = require('../../common/utils.js');
 var p2 = require('p2');
-var player = function (name) {    
+var player = function (name) {
     /* p2 staff start */
     p2.Body.call(this, {
         mass: constants.game.player.mass,
         position: [utils.math.randomInt(0, config.game.bounds.width), utils.math.randomInt(0, config.game.bounds.height)],
         type: p2.Body.DYNAMIC
     });
+    this.damping = 1;
+
     var playerShape = new p2.Circle({ radius: constants.game.player.radius });
     playerShape.collisionGroup = Math.pow(2, 0);
     playerShape.collisionMask = Math.pow(2, 0);

@@ -39,7 +39,7 @@ GameStates.Game.prototype = {
 
     buildWorld: function () {
         var game = this;
-
+        game.stage.disableVisibilityChange = true;
         game.world.setBounds(0, 0, 1920, 1920);
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
