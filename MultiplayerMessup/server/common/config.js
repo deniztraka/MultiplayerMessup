@@ -10,7 +10,7 @@
             height: 80
         },
         vicinityUpdate: false,
-        logLevel:2
+        logLevel:3
     },
     game: {
         bounds: {

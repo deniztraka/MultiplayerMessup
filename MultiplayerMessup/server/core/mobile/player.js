@@ -34,7 +34,7 @@ var player = function (name) {
 
     this.pName = name;
     this.speed = constants.game.player.speed;
-    this.type = constants.game.player.type;
+    this.bodyType = constants.game.player.type;
 
     this.clientInfo = {
         id: this.id,

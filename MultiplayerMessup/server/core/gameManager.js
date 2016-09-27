@@ -17,7 +17,7 @@ var GameManager = (function (my) {
         if (bodyRemovalList.length > 0) {
             for (var i = 0; i < bodyRemovalList.length; i++) {
                 var body = bodyRemovalList[i];
-                if (body.type == constants.game.player.type) {
+                if (body.bodyType == constants.game.player.type) {
                     world.removeBody(body);
                     logger.audit(body.pName + " is removed from world.");
                     playerCount--;
@@ -31,7 +31,7 @@ var GameManager = (function (my) {
     var quePositionAndRotationData = function () {
 
         if (playerCount > 0) {
-            logger.debug("que");
+            //logger.debug("que");
             for (var i = 0; i < world.bodies.length; i++) {
                 var body = world.bodies[i];
                 if (body.type = constants.game.player.type) {
@@ -99,7 +99,7 @@ var GameManager = (function (my) {
     var sendPosAndRotData = function () {
 
         if (playerCount > 0) {
-            logger.debug("send");
+            //logger.debug("send");
             if (config.server.vicinityUpdate) {
                 //send for each player vicinity
                 for (var key in playerSocketDictionary) {
