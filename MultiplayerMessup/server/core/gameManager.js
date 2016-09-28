@@ -4,6 +4,7 @@ var constants = require('../common/constants.js');
 var logger = require('../common/logger.js');
 var utils = require('../common/utils.js');
 var SocketCommandManager = require('./socketCommandManager.js');
+
 var GameManager = (function (my) {
     var io;
     var world;

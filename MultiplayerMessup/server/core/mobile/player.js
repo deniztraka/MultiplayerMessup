@@ -2,6 +2,7 @@
 var constants = require('../../common/constants.js');
 var utils = require('../../common/utils.js');
 var p2 = require('p2');
+
 var player = function (name) {
     /* p2 staff start */
     p2.Body.call(this, {

@@ -5,44 +5,17 @@ var GameManager = require('./gameManager.js');
 var InputManager = require('./inputManager.js');
 var SocketCommandManager = require('./socketCommandManager.js');
 
-var PlayerManager = function (_socket) {
-    var socket = _socket;
-    var player;
-    var inputManager;
-    
-    var disconnectPlayer = function () {
-        SocketCommandManager.RemovePlayer(socket, player.clientInfo);
-        GameManager.RemovePlayerFromWorld(player);
-    };
-    
-    var createSocketEvents = function () {
-        //attach player disconnected event
-        socket.on(constants.eventNames.disconnect, function () {
-            disconnectPlayer(player, socket);
-        });
-        
-        //attach input events coming from client
-        inputManager.CreateSocketEvents();
-    };
-    
-    var init = function () {
-        if (socket) {
-            SocketCommandManager.CreateAlreadyLoggedInPlayers(socket, GameManager.GetPlayerList());
-            
-            //Initializing connected player
-            player = new Player(socket.handshake.query["name"]);
-            GameManager.AddPlayerToWorld(player,socket);
-            
-            SocketCommandManager.CreateLocalPlayer(socket, player.clientInfo);
-            SocketCommandManager.CreateNewRemotePlayer(socket, player.clientInfo);
-            
-            //Initializing player input manager
-            inputManager = new InputManager(socket, player);
-            createSocketEvents();
-        }
-    };
-    
-    init();
+var PlayerManager = function (socket) {
+    var self = this;
+    self.socket = socket;
+    self.player = new Player(socket.handshake.query["name"]);
+    self.inputManager = new InputManager(socket, self.player);
+
+     //attach player disconnected event
+    socket.on(constants.eventNames.disconnect, function () {
+        SocketCommandManager.RemovePlayer(self.socket, self.player.clientInfo);
+        GameManager.RemovePlayerFromWorld(self.player);
+    });
 };
 
 module.exports = PlayerManager;
