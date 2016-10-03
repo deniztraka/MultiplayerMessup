@@ -19,7 +19,7 @@
         player: {
             radius: 15,
             mass: 1,
-            speed: 100,
+            speed: 10,
             type: "alive"
         }
     }

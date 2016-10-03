@@ -1,6 +1,6 @@
 ﻿var constants = require('../common/constants.js');
 var logger = require('../common/logger.js');
-var Player = require('./mobile/player.js');
+var testPlayer = require('./mobile/testPlayer.js');
 var GameManager = require('./gameManager.js');
 var InputManager = require('./inputManager.js');
 var SocketCommandManager = require('./socketCommandManager.js');
@@ -30,7 +30,7 @@ var PlayerManager = function (_socket) {
             SocketCommandManager.CreateAlreadyLoggedInPlayers(socket, GameManager.GetPlayerList());
             
             //Initializing connected player
-            player = new Player(socket.handshake.query["name"]);
+            player = new testPlayer(socket.handshake.query["name"]);
             GameManager.AddPlayerToWorld(player,socket);
             
             SocketCommandManager.CreateLocalPlayer(socket, player.clientInfo);

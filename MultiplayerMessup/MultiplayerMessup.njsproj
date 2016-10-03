@@ -49,6 +49,7 @@
     <Compile Include="server\common\utils.js" />
     <Compile Include="server\core\gameManager.js" />
     <Compile Include="server\core\inputManager.js" />
+    <Compile Include="server\core\mobile\testPlayer.js" />
     <Compile Include="server\core\playerManager.js" />
     <Compile Include="server\core\mobile\player.js" />
     <Compile Include="server\core\socketCommandManager.js" />
