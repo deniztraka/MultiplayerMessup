@@ -203,24 +203,24 @@ var GameManager = (function (my) {
     
     var isAdded = true;
     my.ProcessWorld = function (deltaTime) {        
-        if (!isAdded) { 
-            // Create an empty dynamic body
-            var circleBody = new Player("asd");
+        //if (!isAdded) { 
+        //    // Create an empty dynamic body
+        //    var circleBody = new Player("asd");
             
-            // Add a circle shape to the body
-            //var circleShape = new p2.Circle({ radius: 1 });
-            //circleBody.addShape(circleShape);
+        //    // Add a circle shape to the body
+        //    //var circleShape = new p2.Circle({ radius: 1 });
+        //    //circleBody.addShape(circleShape);
             
-            // ...and add the body to the world.
-            // If we don't add it to the world, it won't be simulated.
-            world.addBody(circleBody);
-            isAdded = true;
-        }
+        //    // ...and add the body to the world.
+        //    // If we don't add it to the world, it won't be simulated.
+        //    world.addBody(circleBody);
+        //    isAdded = true;
+        //}
         
-        var firstBody = world.bodies[0];
-        if (firstBody) { 
-            logger.debug(firstBody.position[1]);
-        }
+        //var firstBody = world.bodies[0];
+        //if (firstBody) { 
+        //    logger.debug(firstBody.position[1]);
+        //}
         world.step(config.server.serverProcessFrequency, deltaTime, config.server.maxSubSteps);            
         
         clearBodyRemovalList();
