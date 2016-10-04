@@ -7,23 +7,21 @@ var InputManager = function (socket, _player) {
     var onUpKeyPressed = function (isDown) {
         player.movementStates.isMovingUp = isDown;
     };
-
     var onDownKeyPressed = function (isDown) {
         player.movementStates.isMovingDown = isDown;
     };
-
     var onLeftKeyPressed = function (isDown) {
         player.movementStates.isMovingLeft = isDown;
     };
-
     var onRightKeyPressed = function (isDown) {
         player.movementStates.isMovingRight = isDown;
+    };    
+    var onShiftKeyPressed = function (isDown) {
+        player.movementStates.isRunning = isDown;
     };
-
     var updateRotation = function (mousePosition) {
         player.mousePosition = mousePosition;
-    };
-
+    };    
 
     //attach mouse position event
     socket.on("c_MousePosition", function (mousePos) {
@@ -42,6 +40,12 @@ var InputManager = function (socket, _player) {
     });
     socket.on("c_OnRightKeyPressed", function (isDown) {
         onRightKeyPressed(isDown);
+    });
+    socket.on("c_OnEKeyPressed", function (isDown) {
+        onShiftKeyPressed(isDowon);
+    });
+    socket.on("c_OnShiftKeyPressed", function (isDown) {
+        onShiftKeyPressed(isDown);
     });
 
     //var onMouseClicked = function (player, mousePosition) {
@@ -77,39 +81,6 @@ var InputManager = function (socket, _player) {
     //        player.speed = serverConfig.gamePlay.movementSpeed;
     //    }
     //};
-
-    //var updateRotation = function (player, mousePosition) {
-    //    player.angle = Math.atan2(mousePosition.x - player.weapon.position[0], -(mousePosition.y - player.weapon.position[1]));
-    //};
-
-
-        //attach player action events
-        //socket.on(Constants.EventNames.OnMouseClicked, function (mousePosition) {
-        //    onMouseClicked(player, mousePosition);
-        //});
-        //socket.on(Constants.EventNames.OnEKeyPressed, function (isDown) {
-        //    onEKeyPressed(player, isDown);
-        //});
-        //socket.on("c_MousePosition", function (mousePos) {
-        //    updateRotation(mousePos);
-        //});
-
-        ////attach movement events
-        //socket.on("c_OnUpKeyPressed", function (isDown) {
-        //    onUpKeyPressed(isDown);
-        //});
-        //socket.on("c_OnDownKeyPressed", function (isDown) {
-        //    onDownKeyPressed(isDown);
-        //});
-        //socket.on("c_OnLeftKeyPressed", function (isDown) {
-        //    onLeftKeyPressed(isDown);
-        //});
-        //socket.on("c_OnRightKeyPressed", function (isDown) {
-        //    onRightKeyPressed(isDown);
-        //});
-        //socket.on("c_OnShiftKeyPressed", function (isDown) {
-        //    onShiftKeyPressed(player, isDown);
-        //});
 
 };
 

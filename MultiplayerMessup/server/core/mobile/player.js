@@ -15,6 +15,7 @@ function Player(name) {
     //playerShape.collisionGroup = Math.pow(2, 0);
     //playerShape.collisionMask = Math.pow(2, 0);
     this.addShape(playerShape);
+    this.damping = 1;
 
     this.mousePosition = {
         x: 0,
@@ -28,7 +29,8 @@ function Player(name) {
         isMovingUp: false,
         isMovingDown: false,
         isMovingLeft: false,
-        isMovingRight: false
+        isMovingRight: false,
+        isRunning: false
     };
     
     this.pName = name;

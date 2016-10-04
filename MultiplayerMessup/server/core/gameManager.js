@@ -10,12 +10,13 @@ var GameManager = (function (my) {
     var io;
     var world;
     var bodyRemovalList = [];
+    var bodyAdditionList = [];
     var playerSocketDictionary = {};
     
     var playerCount = 0;
     var totalElapsedTimeFromSeconds = 0;
     
-    var clearBodyRemovalList = function () {
+    var processBodyRemovalList = function () {
         if (bodyRemovalList.length > 0) {
             for (var i = 0; i < bodyRemovalList.length; i++) {
                 var body = bodyRemovalList[i];
@@ -26,6 +27,20 @@ var GameManager = (function (my) {
                 }
             }
             bodyRemovalList = [];
+        }
+    };
+    var processbodyAdditionList = function () {
+        if (bodyAdditionList.length > 0) {
+            for (var i = 0; i < bodyAdditionList.length; i++) {
+                var playerManager = bodyAdditionList[i];
+                if (playerManager.player.bodyType == constants.game.player.type) {
+                    world.addBody(playerManager.player);
+                    playerSocketDictionary[playerManager.player.id] = [playerManager.player, playerManager.socket];
+                    logger.audit(playerManager.player.pName + " is added to world.");
+                    playerCount++;
+                }
+            }
+            bodyAdditionList = [];
         }
     };
     
@@ -138,38 +153,32 @@ var GameManager = (function (my) {
                     
                     player.angle = Math.getAngle({ x: player.position[0], y: player.position[1] }, { x: player.mousePosition.x, y: player.mousePosition.y });
                     
+                    var currentSpeed = player.pSpeed;
+                    if (player.movementStates.isRunning) { 
+                        currentSpeed = player.pSpeed * constants.game.player.runningSpeedMultiplier; 
+                    }
+
                     if (player.movementStates.isMovingUp) {
                         //player.velocity[1] = -player.speed;
-                        player.position[1] -= player.pSpeed;
-                        console.log("asdwww");
+                        player.position[1] -= currentSpeed;                        
                         setPlayerZone(player, false);
                     }
                     if (player.movementStates.isMovingDown) {
                         //player.velocity[1] = player.speed;
-                        player.position[1] += player.pSpeed;
+                        player.position[1] += currentSpeed;
                         setPlayerZone(player, false);
                     }
                     
-                    //if ((!player.movementStates.isMovingUp && !player.movementStates.isMovingDown) || (player.movementStates.isMovingUp && player.movementStates.isMovingDown)) {
-                    //    player.velocity[1] = 0;
-                    //}
-                    
                     if (player.movementStates.isMovingLeft) {
                         //player.velocity[0] = -player.speed;
-                        player.position[0] -= player.pSpeed;
+                        player.position[0] -= currentSpeed;
                         setPlayerZone(player, true);
                     }
                     if (player.movementStates.isMovingRight) {
                         //player.velocity[0] = player.speed;
-                        player.position[0] += player.pSpeed;
+                        player.position[0] += currentSpeed;
                         setPlayerZone(player, true);
                     }
-
-                    
-                    
-                    //if ((!player.movementStates.isMovingLeft && !player.movementStates.isMovingRight) || (player.movementStates.isMovingLeft && player.movementStates.isMovingRight)) {
-                    //    player.velocity[0] = 0;
-                    //}
 
                     player.previousPosition[0] = player.position[0];
                     player.previousPosition[1] = player.position[0];
@@ -179,13 +188,16 @@ var GameManager = (function (my) {
     };
     
     var onBeginContact = function (evt) {
-        logger.debug("collision occured.");
+        //logger.debug("collision occured.");
     };
     
     var onPostStep = function (evt) {
         processPlayerMovementsAndRotations();
         utils.timerMechanics.executeByIntervalFromSeconds(totalElapsedTimeFromSeconds, config.server.quePositionAndRotationDataFrequencyFromSeconds, quePositionAndRotationData);
         utils.timerMechanics.executeByIntervalFromSeconds(totalElapsedTimeFromSeconds, config.server.positionAndRotationUpdateFrequencyFromSeconds, sendPosAndRotData);
+
+        processbodyAdditionList();
+        processBodyRemovalList();
     };
     
     my.RemovePlayerFromWorld = function (player) {
@@ -193,38 +205,12 @@ var GameManager = (function (my) {
         delete playerSocketDictionary[player.id];
     };
     
-    my.AddPlayerToWorld = function (player, socket) {      
-        world.addBody(player);
-        playerSocketDictionary[player.id] = [player, socket];
-        logger.audit(player.pName + " is added to world.");
-        playerCount++;
-        return player;
+    my.AddPlayerToWorld = function (playerManager) {      
+        bodyAdditionList.push(playerManager);        
     };
-    
-    var isAdded = true;
-    my.ProcessWorld = function (deltaTime) {        
-        //if (!isAdded) { 
-        //    // Create an empty dynamic body
-        //    var circleBody = new Player("asd");
-            
-        //    // Add a circle shape to the body
-        //    //var circleShape = new p2.Circle({ radius: 1 });
-        //    //circleBody.addShape(circleShape);
-            
-        //    // ...and add the body to the world.
-        //    // If we don't add it to the world, it won't be simulated.
-        //    world.addBody(circleBody);
-        //    isAdded = true;
-        //}
-        
-        //var firstBody = world.bodies[0];
-        //if (firstBody) { 
-        //    logger.debug(firstBody.position[1]);
-        //}
-        world.step(config.server.serverProcessFrequency, deltaTime, config.server.maxSubSteps);            
-        
-        clearBodyRemovalList();
 
+    my.ProcessWorld = function (deltaTime) {        
+        world.step(config.server.serverProcessFrequency, deltaTime, config.server.maxSubSteps);                            
     };
     
     my.UpdateTotalElapsedTimeFromSeconds = function (elapsedTime) {
@@ -236,7 +222,7 @@ var GameManager = (function (my) {
         if (playerCount > 0) {
             for (var i = 0; i < world.bodies.length; i++) {
                 var body = world.bodies[i];
-                if (body.type == constants.game.player.type) {
+                if (body.bodyType == constants.game.player.type) {
                     var player = body;
                     playerList.push(player.clientInfo);
                 }

@@ -32,7 +32,7 @@ io.on(constants.eventNames.connect, function (socket) {
     SocketCommandManager.CreateAlreadyLoggedInPlayers(socket, GameManager.GetPlayerList());
 
     var playerManager = new PlayerManager(socket);
-    GameManager.AddPlayerToWorld(playerManager.player, socket);
+    GameManager.AddPlayerToWorld(playerManager);
 
     SocketCommandManager.CreateLocalPlayer(socket, playerManager.player.clientInfo);
     SocketCommandManager.CreateNewRemotePlayer(socket, playerManager.player.clientInfo);
