@@ -18,22 +18,12 @@ app.use('/public', express.static(__dirname + '/public'));
 var lastTimeSeconds;
 var totalElapsedTimeFromSeconds = 0;
 
-// creating world
-var world = new p2.World({
-    gravity: [0, 0],
-    islandSplit: true
-});
-world.solver = new p2.GSSolver();
-//world.solver.iterations = 5; // Fast, but contacts might look squishy...
-world.solver.iterations = 25;
-//world.solver.iterations = 50; // Slow, but contacts look good!
-world.solver.tolerance = 0.01;
-
-GameManager.Init(world);
+GameManager.Init();
 SocketCommandManager.Init(io);
 
 // opening server
 serv.listen(process.env.PORT || config.server.port, function (s) {
+
 
 });
 

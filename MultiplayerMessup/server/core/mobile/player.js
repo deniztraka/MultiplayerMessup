@@ -3,21 +3,18 @@ var constants = require('../../common/constants.js');
 var utils = require('../../common/utils.js');
 var p2 = require('p2');
 
-module.exports = player;
+module.exports = Player;
 
-function player (name) {
-    /* p2 staff start */
+function Player(name) {    
     p2.Body.call(this, {
         mass: constants.game.player.mass,
-        position: [utils.math.randomInt(0, config.game.bounds.width), utils.math.randomInt(0, config.game.bounds.height)]
+        position: [utils.math.randomInt(0, config.game.bounds.width), utils.math.randomInt(0, config.game.bounds.height)],
+        angularVelocity: 200
     });
-    //damping = 1;
-
     var playerShape = new p2.Circle({ radius: constants.game.player.radius });
-    playerShape.collisionGroup = Math.pow(2, 0);
-    playerShape.collisionMask = Math.pow(2, 0);
+    //playerShape.collisionGroup = Math.pow(2, 0);
+    //playerShape.collisionMask = Math.pow(2, 0);
     this.addShape(playerShape);
-    /* p2 staff end */
 
     this.mousePosition = {
         x: 0,
@@ -33,7 +30,7 @@ function player (name) {
         isMovingLeft: false,
         isMovingRight: false
     };
-
+    
     this.pName = name;
     this.pSpeed = constants.game.player.speed;
     this.bodyType = constants.game.player.type;
@@ -46,7 +43,7 @@ function player (name) {
             y: this.position[1]
         }
     };
-};
-player.prototype = new Object(p2.Body.prototype);
-player.prototype.constructor = player;
-//player.prototype = Object.create(p2.Body.prototype);
+}
+
+Player.prototype = new Object(p2.Body.prototype);
+Player.prototype.constructor = Player;

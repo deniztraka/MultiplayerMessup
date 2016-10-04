@@ -3,7 +3,7 @@ var config = require('../common/config.js');
 var constants = require('../common/constants.js');
 var logger = require('../common/logger.js');
 var utils = require('../common/utils.js');
-var testPlayer = require('./mobile/testPlayer.js');
+var Player = require('./mobile/player.js');
 var SocketCommandManager = require('./socketCommandManager.js');
 var p2 = require('p2');
 var GameManager = (function (my) {
@@ -205,7 +205,7 @@ var GameManager = (function (my) {
     my.ProcessWorld = function (deltaTime) {        
         if (!isAdded) { 
             // Create an empty dynamic body
-            var circleBody = new testPlayer("asd");
+            var circleBody = new Player("asd");
             
             // Add a circle shape to the body
             //var circleShape = new p2.Circle({ radius: 1 });
@@ -246,8 +246,18 @@ var GameManager = (function (my) {
         return playerList;
     };
     
-    my.Init = function (_world) {
-        world = _world;
+    my.Init = function () {
+        // creating world
+        world = new p2.World({
+            gravity: [0, 0],
+            islandSplit: true
+        });
+        world.solver = new p2.GSSolver();
+        //world.solver.iterations = 5; // Fast, but contacts might look squishy...
+        world.solver.iterations = 25;
+        //world.solver.iterations = 50; // Slow, but contacts look good!
+        world.solver.tolerance = 0.01;
+        
         world.on('beginContact', onBeginContact);
         world.on('postStep', onPostStep);
     };
