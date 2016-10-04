@@ -9,7 +9,6 @@ var serv = require('http').Server(app);
 var io = require('socket.io')(serv, {});
 var p2 = require('p2');
 
-
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
@@ -40,7 +39,13 @@ serv.listen(process.env.PORT || config.server.port, function (s) {
 
 // player connected event
 io.on(constants.eventNames.connect, function (socket) {
+    SocketCommandManager.CreateAlreadyLoggedInPlayers(socket, GameManager.GetPlayerList());
+
     var playerManager = new PlayerManager(socket);
+    GameManager.AddPlayerToWorld(playerManager.player, socket);
+
+    SocketCommandManager.CreateLocalPlayer(socket, playerManager.player.clientInfo);
+    SocketCommandManager.CreateNewRemotePlayer(socket, playerManager.player.clientInfo);
 });
 
 // main game loop
