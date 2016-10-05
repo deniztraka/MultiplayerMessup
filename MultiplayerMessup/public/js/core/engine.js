@@ -6,13 +6,13 @@
     };
 
     my.CreateLocalPlayer = function (playerData) {
-        var localPlayer = new ClientPlayer(game, playerData.id, playerData.name, playerData.position);
+        var localPlayer = new ClientPlayer(game, playerData.id, playerData.name, playerData.position,true);        
         game.camera.follow(localPlayer.sprite);
         playerList[playerData.id] = localPlayer;
     };
 
     my.CreateNewRemotePlayer = function (playerData) {
-        playerList[playerData.id] = new ClientPlayer(game, playerData.id, playerData.name, playerData.position);
+        playerList[playerData.id] = new ClientPlayer(game, playerData.id, playerData.name, playerData.position,false);
     };
 
     my.UpdatePlayerPositionsAndRotations = function (playerPositionsAndRotationsDatas) {
@@ -25,6 +25,13 @@
                     var pos0 = playerPositionAndRotationData.positions[0];
                     var pos1 = playerPositionAndRotationData.positions[1];
                     var pos2 = playerPositionAndRotationData.positions[2];
+                    
+                    var nickNameTextYOffSet = player.playerSpriteVisibleHeight + player.nickNameText.height/2;
+                    game.add.tween(player.nickNameText).to(
+                        {
+                            x: [pos0.x, pos1.x, pos2.x],
+                            y: [pos0.y - nickNameTextYOffSet, pos1.y - nickNameTextYOffSet, pos2.y - nickNameTextYOffSet]
+                        }, 1000 / 10, Phaser.Easing.Linear.None, true);
 
                     game.add.tween(player.sprite).to(
                         {
