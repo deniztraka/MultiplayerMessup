@@ -9,6 +9,15 @@
     var shiftDown = false;
     var eDown = false;
     var nextMousePositionSendTime = 0;
+    var nextMouseClicked = 0;
+    
+    function mouseClickHandle() {
+        var totalElapsedSeconds = game.time.now;
+        if (totalElapsedSeconds > nextMouseClicked) {
+            nextMouseClicked = totalElapsedSeconds + 500;
+            socket.emit("c_OnMouseClicked", { x: game.input.mousePointer.worldX, y: game.input.mousePointer.worldY });
+        }
+    }
 
     my.Init = function (_game, _socket) {
         game = _game;
@@ -101,6 +110,14 @@
             nextMousePositionSendTime = totalElapsedSeconds + 1000/15;
             socket.emit("c_MousePosition", { x: game.input.mousePointer.worldX, y: game.input.mousePointer.worldY });
         }
+    };
+    
+    
+    
+    my.CheckMouseClicks = function () { 
+        game.input.activePointer.leftButton.onDown.add(function () {
+            mouseClickHandle();
+        }, this);
     };
 
     return my;

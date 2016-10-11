@@ -29,6 +29,7 @@ GameStates.Game.prototype = {
     update: function () {
         InputManager.CheckMovement();
         InputManager.CheckMousePosition();
+        InputManager.CheckMouseClicks();
     },
 
     render: function () { },

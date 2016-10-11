@@ -47,13 +47,13 @@ var InputManager = function (socket, _player) {
     socket.on("c_OnShiftKeyPressed", function (isDown) {
         onShiftKeyPressed(isDown);
     });
+    socket.on("c_OnMouseClicked", function (mousePosition) {
+        onMouseClicked();
+    });
 
-    //var onMouseClicked = function (player, mousePosition) {
-    //    var canSlash = attack(player);
-    //    if (canSlash) {
-    //        processSlash(player, mousePosition);
-    //    }
-    //};
+    var onMouseClicked = function (mousePosition) {
+        player.attack();
+    };
 
     //var onShiftKeyPressed = function (player, isDown) {
     //    player.isRunning = isDown;

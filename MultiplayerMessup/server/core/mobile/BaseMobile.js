@@ -2,35 +2,67 @@
 var constants = require('../../common/constants.js');
 var utils = require('../../common/utils.js');
 var p2 = require('p2');
+var extend = require('extend');
 
 module.exports = BaseMobile;
 
-function BaseMobile(bodyOptions,name,speed,bodyType) {
-    var selfOptions = bodyOptions;
+function BaseMobile(bodyOptions, name, speed, bodyType) {
+    var selfOptions = {};
+    extend(true, selfOptions, bodyOptions);
     p2.Body.call(this, selfOptions);
-
-    this.zone = {
-        x: Math.floor(this.position[0] / config.server.zoneSize.width),
-        y: Math.floor(this.position[1] / config.server.zoneSize.height),
+    
+    var self = this;
+    
+    self.zone = {
+        x: Math.floor(self.position[0] / config.server.zoneSize.width),
+        y: Math.floor(self.position[1] / config.server.zoneSize.height),
     };
-    this.movementStates = {
+    self.movementStates = {
         isMovingUp: false,
         isMovingDown: false,
         isMovingLeft: false,
         isMovingRight: false,
         isRunning: false
     };
-
-    this.pName = name;
-    this.pSpeed = speed;
-    this.bodyType = bodyType;
-
-    this.clientInfo = {
-        id: this.id,
-        name: this.pName,
+    
+    self.pName = name;
+    self.pSpeed = speed;
+    self.bodyType = bodyType;
+    
+    var weapons = [];
+    var lastAttackTime = 0;
+    var checkAttackRate = function () {
+        var nextAttackTime = lastAttackTime + 0.5;
+        if (nextAttackTime < self.world.time) {
+            return true;
+        }
+        return false;
+    };
+    
+    self.addWeapon = function (weapon) {
+        if (weapon.bodyType == 'weapon') {
+            weapons.push(weapon);
+        }
+    };
+    
+    self.attack = function () {
+        if (checkAttackRate()) {
+            if (weapons.length > 0) {
+                weapons[0].attack();
+                lastAttackTime = self.world.time;
+            } else {
+                console.log("no active weapon");
+            }
+            
+        }
+    };
+    
+    self.clientInfo = {
+        id: self.id,
+        name: self.pName,
         position: {
-            x: this.position[0],
-            y: this.position[1]
+            x: self.position[0],
+            y: self.position[1]
         }
     };
 };

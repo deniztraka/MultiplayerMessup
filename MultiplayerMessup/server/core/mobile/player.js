@@ -2,11 +2,15 @@
 var constants = require('../../common/constants.js');
 var utils = require('../../common/utils.js');
 var BaseMobile = require('./BaseMobile.js');
+var Stone = require('../items/weapons/Stone.js');
 var p2 = require('p2');
 
 module.exports = Player;
 
-function Player(name) {    
+
+
+function Player(name) {
+    var self = this;  
     BaseMobile.call(this, {
         mass: constants.game.player.mass,
         position: [utils.math.randomInt(0, config.game.bounds.width), utils.math.randomInt(0, config.game.bounds.height)]
@@ -15,7 +19,8 @@ function Player(name) {
     //playerShape.collisionGroup = Math.pow(2, 0);
     //playerShape.collisionMask = Math.pow(2, 0);
     this.addShape(playerShape);
-    this.damping = 1;
+    this.damping = 1;        
+    addDefaultWeapon(this);
     this.mousePosition = {
         x: 0,
         y: 0
@@ -24,3 +29,10 @@ function Player(name) {
 
 Player.prototype = new Object(BaseMobile.prototype);
 Player.prototype.constructor = Player;
+
+var addDefaultWeapon = function (player) {
+    var weapon = new Stone({        
+        position: [player.position[0], player.position[1]]
+    });
+    player.addWeapon(weapon);
+};

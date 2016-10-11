@@ -49,6 +49,9 @@
     <Compile Include="server\common\utils.js" />
     <Compile Include="server\core\gameManager.js" />
     <Compile Include="server\core\inputManager.js" />
+    <Compile Include="server\core\items\BaseItem.js" />
+    <Compile Include="server\core\items\weapons\BaseWeapon.js" />
+    <Compile Include="server\core\items\weapons\Stone.js" />
     <Compile Include="server\core\mobile\BaseMobile.js" />
     <Compile Include="server\core\mobile\player.js" />
     <Compile Include="server\core\playerManager.js" />
@@ -74,7 +77,9 @@
     <Folder Include="public\assets\" />
     <Folder Include="server\common\" />
     <Folder Include="server\core\" />
+    <Folder Include="server\core\items\weapons\" />
     <Folder Include="server\core\mobile\" />
+    <Folder Include="server\core\items\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
